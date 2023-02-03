@@ -1,32 +1,43 @@
-#include<stdio.h>
-int main()
-{
-    int bt[20],p[20],wt[20],tat[20],i,j,n,total=0,totalT=0,pos,temp;
-    float avg_wt,avg_tat;
-    printf("Enter number of process:");
+#include <stdio.h>
+void swap(int *a,int *b){
+    int temp=*a;
+    *a=*b;
+    *b=temp;
+}
+int main(){
+    int n;
+    printf("Enter Number of Processes: ");
     scanf("%d",&n);
- 
-    printf("\nEnter Burst Time:\n");
-    for(i=0;i<n;i++)
-    {
-        printf("p%d:",i+1);
-        scanf("%d",&bt[i]);
-        p[i]=i+1;
+    int b[n],p[n],index[n];
+    for(int i=0;i<n;i++){
+        printf("Enter Burst Time and Priority Value for Process %d: ",i+1);
+        scanf("%d %d",&b[i],&p[i]);
+        index[i]=i+1;
     }
-    for(i=0;i<n;i++)
-    {
-        pos=i;
-        for(j=i+1;j<n;j++)
-        {
-            if(bt[j]<bt[pos])
-                pos=j;
+    for(int i=0;i<n;i++){
+        int a=p[i],m=i;
+        for(int j=i;j<n;j++){
+            if(p[j] > a){
+                a=p[j];
+                m=j;
+            }
         }
- 
-        temp=bt[i];
-        bt[i]=bt[pos];
-        bt[pos]=temp;
- 
-        temp=p[i];
-        p[i]=p[pos];
-        p[pos]=temp;
+        swap(&p[i], &p[m]);
+        swap(&b[i], &b[m]);
+        swap(&index[i],&index[m]);
     }
+    int t=0;
+    printf("Order of process Execution is\n");
+    for(int i=0;i<n;i++){
+        printf("P%d is executed from %d to %d\n",index[i],t,t+b[i]);
+        t+=b[i];
+    }
+    printf("\n");
+    printf("Process Id     Burst Time   Wait Time    TurnAround Time\n");
+    int wait_time=0;
+    for(int i=0;i<n;i++){
+        printf("P%d          \t%d          \t%d          \t%d\n",index[i],b[i],wait_time,wait_time + b[i]);
+        wait_time += b[i];
+    }
+    return 0;
+}
